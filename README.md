@@ -21,7 +21,7 @@ Solusi yang dapat dilakukan untuk menangani permasalahan sebagaimana terdapat da
 ## Data Understanding
 Dataset yang digunakan didalam proyek ini didapat pada situ Kaggle, untuk mendownload dataset dapat dilakukan di [link](https://www.kaggle.com/datasets/rohan4050/movie-recommendation-data?select=ml-latest-small) berikut. 
 Dataset terdiri dari beberapa file seperti movies, tags, ratings, dan links. Dimana :
-- Pada file Movies terdapat 9742 baris dan 3 kolom
+- Pada file Movies terdapat 9742 baris dan 3 kolom. Untuk _sample_ dataset _movies dapat dilihat pada Tabel 1. 
   
 Tabel 1. Sample Dataset Movies
 
@@ -31,7 +31,7 @@ Tabel 1. Sample Dataset Movies
 |   2|   Jumanji(1995)|   Adventure, Children, Fantasy|
 |   3|   Grumpier Old Men(1995)|   Comedy, Romance|
 
-- Pada file Tags terrdapat 3683 baris dan 4 kolom
+- Pada file Tags terdapat 3683 baris dan 4 kolom. Untuk _sample_ dataset _tags_ dapat dilihat pada Tabel 2.
 
 Tabel 2. Sample Dataset Tags
 
@@ -41,7 +41,7 @@ Tabel 2. Sample Dataset Tags
 |   2|   60756|   Highly quoteable|   1445714996|
 |   2|   89774|   Boxing story|   1445715207|
   
-- Pada file Ratings terdapat 101000 baris dan 4 kolom
+- Pada file Ratings terdapat 101000 baris dan 4 kolom. Untuk _sample_ dataset _ratings_ dapat dilihat pada Tabel 3.
 
 Tabel 3. Sample Dataset Ratings  
 
@@ -51,7 +51,7 @@ Tabel 3. Sample Dataset Ratings
 |   1|   3|   4.0|   964981247|
 |   1|   47|   5.0|   964983815|
   
-- Pada file Links terdapat 9742 baris dan 3 kolom
+- Pada file Links terdapat 9742 baris dan 3 kolom. Untuk _sample_ datast _links_ dapat dilihat pada Tabel 4.
 
 Tabel 4. Sample Dataset Links
 
@@ -64,25 +64,16 @@ Tabel 4. Sample Dataset Links
 ## Data Preparation
 Tahapan _data preparation_ yang dilakukan pada  _Content Based Filtering_ , yaitu sebagai berikut:
 - Mengubah dataset menjadi _dataframe_ dengan menggunakan pandas.
-- Menggabungkan beberapa file dengan fungsi _concatenate_
-  
-        users = np.concatenate((
-        tags.userId.unique(),
-        ratings.userId.unique(),
-        ))
-                                    
-        users = np.sort(np.unique(users))
-        print('number of all users: ', len(users))
-  
+- Menggabungkan beberapa file dengan fungsi _concatenate_  
 Menggabungkan semua userId pada _users_, dalam hal ini userId yang ada pada file _tags_ dan _ratings_, kemudian mengambil nilai unik pada _users_ yang diurutkan. Maka didapati jumlah seluruh _users_ sebesar 610.
 
 - Menggabungkan data dengan fungsi _merge_
 
       movies_names = pd.merge(ratings, movies[['movieId','title','genres']], on='movieId', how='left')
 
-Melakukan _merge_(penggabungan) file _ratings_ dan file _movies_ dengan _left join_ (dalam hal ini mengambil data _ratings_(df kiri(_left_)) dan membuang baris dari df kanan yang tidak memiliki kecocokan dikolom kunci df kiri(_left_)) dalam hal ini berdasarkan _movieId_ dan disimpan di df _movies_names_.
+Melakukan _merge_(penggabungan) file _ratings_ dan file _movies_ dengan _left join_ (dalam hal ini mengambil data _ratings_(df kiri(_left_)) dan membuang baris dari df kanan yang tidak memiliki kecocokan dikolom kunci df kiri(_left_)) dalam hal ini berdasarkan _movieId_ dan disimpan di df _movies_names_. Untuk hasil _merge_ file _ratings_ dan file _movies_ dapat dilihat pada Tabel 5.
 
-Tabel 5. Hasil _Merge_ file _ratings dan file _movies_  
+Tabel 5. Hasil _Merge_ file _ratings_ dan file _movies_  
 
 |userId|movieId|rating|timestamp|title|genres|
 |---|---|---|---|---|---|
@@ -92,10 +83,7 @@ Tabel 5. Hasil _Merge_ file _ratings dan file _movies_
 |610|166534|4.0|1493848402|Split (2017)|Drama, Horror, Thriller|
 |610|168250|5.|1494273047|Get Out (2017)|	Horror|
 
-      movies_merge = pd.merge(movies_names, tags[['movieId','tag']], on='movieId', how='left')
-      movies_merge
-
-Kemudian dilanjutkan dengan menggabungkan _movies_names_ dan _tags_ dengan _left join_ berdasarkan _movieId_. Untuk hasinya bisa dilihat apada tabel dibawah ini.
+Kemudian dilanjutkan dengan menggabungkan _movies_names_ dan _tags_ dengan _left join_ berdasarkan _movieId_. Untuk hasilnya bisa dilihat pada Tabel 6.
 
 Tabel 6. Hasil _Merge_ file _movies_names_ dan _tags_
 
@@ -110,29 +98,23 @@ Tabel 6. Hasil _Merge_ file _movies_names_ dan _tags_
 |610|	168252|5.0|	1493846352	|Logan (2017)|Action, Sci-Fi|gritty|
 |610| 170875|3.0|	1493846415	|The Fate of the Furious (2017)|Action, Crime, Drama, Thriller|NaN|
 
-- Mengecek _missing value_ dengan fungsi _isnull_.
+- Mengecek _missing value_ dengan fungsi _isnull_. 
   
   ![image](https://github.com/zashnf/Recommendation-System/assets/89719711/e778d21c-8d19-4860-b8e0-f92089ec6593)
 
   Gambar 1. Fungsi _isnull_
 
   Dapat dilihat pada gambar 1 bahwa terdapat _missing values_ sekitar 52549 pada kolom _tags_, maka bisa menggunakan _dropna_ untuk menghapus _missing value_.
+  
 - Membersihkan data dari nilai _null_ dengan menggunakan fungsi _dropna_.
-
-        movies_merge = movies_merge.dropna()
   
   ![image](https://github.com/zashnf/Recommendation-System/assets/89719711/e1a8af7a-6729-45c2-a7c7-c53bbc7cec88)
  
   Gambar 2. Hasil setelah menggunakan dropna
 
-  Dari gambar 2 sudah dapat dilihat tidak ada _missing valuenya_. Kemudian urutkan berdasarkan _moviesId_ setelah diurutkan terdapat sekitar 233213 baris dan 7 kolom
+  Dari gambar 2 sudah dapat dilihat tidak ada _missing valuenya_ karena sudah menggunakan fungsi _dropna_ untuk menghapus data yang tidak memiliki nilai dan fungsi. Kemudian urutkan berdasarkan _moviesId_ setelah diurutkan terdapat sekitar 233213 baris dan 7 kolom
 
-        movies_merge = movies_merge.sort_values('movieId', ascending=True)
-  
 - Membersihkan data dari duplikasi menggunakan fungsi _drop duplicates_.
-
-        movies_merge = movies_merge.drop_duplicates('movieId')
-
 Membuang data duplikat dengan _drop_duplicates_ pada _movieId_,sehingga _movieId_ tidak ada yang sama dan didapati data sebanyak 1554 baris dan 7 kolom.
 
 - Mengkonversi _data series_ menjadi bentuk list, dengan _tolist_.
@@ -141,7 +123,7 @@ Membuang data duplikat dengan _drop_duplicates_ pada _movieId_,sehingga _movieId
       names = movies_merge['title'].tolist()
       genres = movies_merge['genres'].tolist()
   
-- Membuat _dictionary_ untuk menentukan pasangan _key-value_ pada data yang telah disiapkan.
+- Membuat _dictionary_ untuk menentukan pasangan _key-value_ pada data yang telah disiapkan. Pada 
 
         new_movies = pd.DataFrame({
              'id': id,
@@ -199,31 +181,6 @@ Tabel 8. Matriks tfidf berdasarkan _genres_
       cosine_sim_data = pd.DataFrame(cosine_sim, index=new_movies['names'], columns=new_movies['names'])
       print('Shape:', cosine_sim_data.shape)
       cosine_sim_data.sample(5, axis=1).sample(10, axis=0)
-  
-Tabel 9. Sample Data _cosine_
-
-|names|Da Vinci Code, The (2006)|Lost Weekend, The (1945)|City of God (Cidade de Deus) (2002)|Chain Reaction (1996)|Love Me If You Dare (Jeux d'enfants) (2003)|
-|---|---|---|---|---|---|
-|Life Is Beautiful (La Vita è bella) (1997)|0.098907|0.291622|0.076756|0.000000|0.548325|
-|Hurricane, The (1999)|0.339161|1.000000|0.263204|0.000000|0.531842|
-|...|...|...|...|...|...|
-|Devil's Rejects, The (2005)|0.000000|0.000000|0.514006|0.297762|0.000000|
-|Good Copy Bad Copy (2007)|0.000000|0.000000|0.000000|0.000000|0.000000|
-
-- Membuat fungsi rekomendasi dengan parameter:
-  
-        def movrecomm(movies_name, similarity_data=cosine_sim_data, items=new_movies[['names', 'genres']], k=3):
-          index = similarity_data.loc[:,movies_name].to_numpy().argpartition(
-              range(-1, -k, -1))
-          closest = similarity_data.columns[index[-1:-(k+2):-1]]
-          closest = closest.drop(movies_name, errors='ignore')
-       return pd.DataFrame(closest).merge(items).head(k)
-
-  dimana:
-  - _movies_name_ = berisikan judul film.
-   - _similarity_data_ = berisi tentang hasil perhitungan cosine.
-   - _Items_ = fitur yang digunakan untuk kemiripan (disini menggunakan _names_ dan _genres_).
-   - k = banyak rekomendasi yang ingin diberikan(menggunakan k sebanyak 3).
    
 
 Tahapan _data preparation_ yang dilakukan pada  _Collaborative Filtering_ , yaitu sebagai berikut:
@@ -309,18 +266,30 @@ Gambar 4. Hasil variabel x dan y
 ## Modeling and Result
 Pada proyek ini saya melakukan modeling dengan menggunakan algoritma _Content Based Filtering_ dan _Collaborative Filtering_. 
 
- _Content Based Filtering_ akan memberikan rekomendasi berdasarkan kemiripan _item_ yang dianalisis dari fitur yang dikandung oleh _item_ sebelumnya. Sedangkan _Collaborative Filtering_ merupakan metode yang memprediksi kegunaan _item_ yang dilihat dari _user_ sebelumnya.
-
 ### _Content Based Filtering_ 
-Pada _Content Based Filtering_ rekomendasi yang dihasilkan itu berdasarkan dengan _item_ atau dalam hal ini film yang disukai sebelumnya, sehingga hasilnya akan menampilkan beberapa film yang memiliki _genres_ mirip dengan yang sebelumnya. Cara kerja dari model ini untuk mendapatkan hasil rekomendasi yaitu dengan mencari kemiripan bobot dari _term_ pada _bag of words_ hasil pre-processing _genres_ film dan nama film. Pembobotan dilakukan menggunakan metode TF-IDF yang telah dinormalisasi. Kemudian hasil pembobotan akan melalui tahap _cosine similarity_ untuk mencari kemiripan berdasarkan bobot dan diakhiri dengan _filtering_ berdasarkan _genre_. Misal disini saya memasukan nama film yang ada pada tabel 11. maka ia akan mencari _genres_ yang serupa dengan film yang dimasukan itu. Untuk hasil rekomendasi dari _Content Based Filtering_ dapat dilihat pada Tabel 12.
+Pada _Content Based Filtering_ rekomendasi yang dihasilkan itu berdasarkan dengan _item_ atau dalam hal ini film yang disukai sebelumnya, sehingga hasilnya akan menampilkan beberapa film yang memiliki _genres_ mirip dengan yang sebelumnya. Cara kerja dari model ini untuk mendapatkan hasil rekomendasi yaitu dimulai dari menyiapkan dataframe yang telah dibrsihkan pada tahap _data preparation_ sebelumnya. Kemudian menggunakan _tfidfvectorizer_ yang ada pada _library scikit-learn_ untuk mencari kemiripan bobot pada _genres_ dalam bentuk matriks. Kemudian hasilnya akan melalui tahap _cosine similarity_ untuk dihitung derajat kesamaan antar film. output dari _cosine similarity_ berupa matriks ini bisa dikonversikan ke bentuk dataframe yang bisa dilihat pada Tabel 9.
 
+Tabel 9. Sample Data _cosine_
+
+|names|Da Vinci Code, The (2006)|Lost Weekend, The (1945)|City of God (Cidade de Deus) (2002)|Chain Reaction (1996)|Love Me If You Dare (Jeux d'enfants) (2003)|
+|---|---|---|---|---|---|
+|Life Is Beautiful (La Vita è bella) (1997)|0.098907|0.291622|0.076756|0.000000|0.548325|
+|Hurricane, The (1999)|0.339161|1.000000|0.263204|0.000000|0.531842|
+|...|...|...|...|...|...|
+|Devil's Rejects, The (2005)|0.000000|0.000000|0.514006|0.297762|0.000000|
+|Good Copy Bad Copy (2007)|0.000000|0.000000|0.000000|0.000000|0.000000|
+
+Tahapan terakhir pada _Content Based Filtering_ yaitu membuat fungsi rekomendasi dengan parameter _movies_name_, _similarity_data_, _Items_ , dan k. Fungsi ini bekerja dengan mengambil _similarity_data_ yang berisikan hasil perhitungan _cosine_similarity_ dengan _items_ _names_ dan _genres_ yang digunakan untuk kemiripan pada _dataframe_ _new_movies_, terdapat juga variabel _closest_ yang memuat data nama film(_movies_name_) yang mirip. Lalu parameter k memuat banyaknya rekomendasi film yang ingin diberikan(disini saya memasukkan k=3). 
+
+Misal disini saya memasukan nama film yang ada pada tabel 11. maka ia akan mencari _genres_ yang serupa dengan film yang dimasukan itu. Untuk hasil rekomendasi dari _Content Based Filtering_ dapat dilihat pada Tabel 12.
+ 
 Tabel 11. Film yang disukai sebelumnya
 
 |  **id** | **names** | **genres** |
 |---------|-----------|------------|
 |  168252 |Logan(2017)| Action, Sci-fi|
 
-Dapat dilihat bahwa pada tabel 11 _user_ menyukai atau pernah menonton film Logan yang ber _genres_ _Action_ dan _Sci-fi_  . Maka sistem akan merekomendasikan beberapa film berdasarkan _genres_ yang disukai oleh _user_ yaitu _Action_ dan _Scifi_.
+Dapat dilihat bahwa pada tabel 11 _user_ menyukai atau pernah menonton film Logan yang ber _genres_ _Action_ dan _Sci-fi_  . Maka sistem akan merekomendasikan beberapa film berdasarkan _genres_ yang disukai oleh _user_ yaitu _Action_ dan _Sci-fi_.
 
 Tabel 12. Hasil Rekomendasi Film Logan(2017)
 
@@ -333,7 +302,9 @@ Tabel 12. Hasil Rekomendasi Film Logan(2017)
 Pada tabel 12 dapat dilihat bahwa _genres_ yang direkomendasikan oleh sistem tidak jauh berbeda dengan _genres_ film yang pernah ditonton sebelumnya.
 
 ###  _Collaborative Filtering_
-Pada _Collaborative Filtering_ rekomendasi yang dihasilkan itu berdasarkan dari _rating_ yang diberikan oleh _user_ pada film film yang sebelumnya pernah dinilai(_rating_). Cara kerja dari  _Collaborative Filtering_ ini menggunakan _keras RecommerderNet model_ berbasis TensorFlow untuk mempelajari pola preferensi _user_ dan interaksi mereka dengan _movies_ . Model ini menggunakan _embedding_ untuk merepresentasikan _user_ dan _movies_. Dengan menggabungkan _embedding_ tersebut, maka dapat memprediksi preferensi _user_ terhadap _movies_ tertentu. Untuk hasilnya dapat dilihat pada gambar dibawah ini.
+Pada _Collaborative Filtering_ rekomendasi yang dihasilkan itu berdasarkan dari _rating_ yang diberikan oleh _user_ pada film film yang sebelumnya pernah dinilai(_rating_). 
+
+Cara kerja dari  _Collaborative Filtering_ ini menggunakan _keras RecommerderNet model_ berbasis TensorFlow untuk mempelajari pola preferensi _user_ dan interaksi mereka dengan _movies_ . Model ini menggunakan _embedding_ untuk merepresentasikan _user_ dan _movies_. Dengan menggabungkan _embedding_ tersebut, maka dapat memprediksi preferensi _user_ terhadap _movies_ tertentu. Untuk hasilnya dapat dilihat pada gambar dibawah ini.
 
 Tabel 13. Movies with high rating from user 599
 
