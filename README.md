@@ -73,22 +73,10 @@ Pada Tabel 4 _movieId_ memuat nomor id film yang merujuk pada website MoviLens, 
 Pada proses _Exploratory Data Analysis_ dilakukan untuk melihat hubungan antar dataset berdasarkan variabel id, disini menggunakan _moviesId__ dan _userId_.
 
 - _moviesId_
-  Menggabungkan seluruh movieId yang merujuk ke film yang sama pada file (_movies_, _tags_, _ratings_, dan _links_) dan disimpan pada kategori _all_movies_.
-  
-![image](https://github.com/zashnf/Recommendation-System/assets/89719711/c84e92a1-ed61-49d0-968d-a880bae9ec5e)
-
-Gambar 1. EDA _moviesId_
-
-Pada Gambar 1 dapat dilihat bahwa jumlah seluruh data _movies_  berdasarkan _moviesId_ sebesar 9742.
+Menggabungkan seluruh movieId yang merujuk ke film yang sama pada file (_movies_, _tags_, _ratings_, dan _links_) dan disimpan pada _all_movies_.Sehingga didapat jumlah seluruh data _movies_ berdasarkan _moviesId_ sebanyak 9742.
 
 - _userId_
-Menggabungkan seluruh _userId  yang merujuk ke _userId_ yang sama pada file  _tags_ dan _ratings_.
- 
-![image](https://github.com/zashnf/Recommendation-System/assets/89719711/401d2efa-d345-4df1-bbf0-c0c037c89229)
-
-Gambar 2. EDA _userId_
-
-Pada Gambar 2 dapat dilihat bahwa jumlah seluruh pengguna(_user_) ada sebanyak 610.
+Menggabungkan semua userId pada users, dalam hal ini userId pada file _tags_ dan _ratings_, kemudian mengambil nilai unik pada _userId_ . Sehingga didapat jumlah seluruh pengguna(_user_) ada sebanyak 610.
 
 ## Data Preparation
 Tahapan _data preparation_ yang dilakukan pada  _Content Based Filtering_ , yaitu sebagai berikut:
@@ -122,22 +110,8 @@ Tabel 6. Hasil _Merge_ file _movies_names_ dan _tags_
 |610|	168252|5.0|	1493846352	|Logan (2017)|Action, Sci-Fi|gritty|
 |610| 170875|3.0|	1493846415	|The Fate of the Furious (2017)|Action, Crime, Drama, Thriller|NaN|
 
-- Mengecek _missing value_ dengan fungsi _isnull_. 
-  
-  ![image](https://github.com/zashnf/Recommendation-System/assets/89719711/e778d21c-8d19-4860-b8e0-f92089ec6593)
-
-  Gambar 3. Fungsi _isnull_
-
-  Dapat dilihat pada gambar 3 bahwa terdapat _missing values_ sekitar 52549 pada kolom _tags_, maka bisa menggunakan _dropna_ untuk menghapus _missing value_.
-  
-- Membersihkan data dari nilai _null_ dengan menggunakan fungsi _dropna_.
-  
-  ![image](https://github.com/zashnf/Recommendation-System/assets/89719711/e1a8af7a-6729-45c2-a7c7-c53bbc7cec88)
- 
-  Gambar 4. Hasil setelah menggunakan dropna
-
-  Dari gambar 4 sudah dapat dilihat tidak ada _missing valuenya_ karena sudah menggunakan fungsi _dropna_ untuk menghapus data yang tidak memiliki nilai dan fungsi. Kemudian urutkan berdasarkan _moviesId_ setelah diurutkan terdapat sekitar 233213 baris dan 7 kolom.
-
+- Mengecek _missing value_ dengan fungsi _isnull_. Fungsi ini akan mengecek nilai pada setiap kolom apakah ada nilai yang hilang atau tidak, disini saya mengecek _missing value_ pada data  _movies_merge_ dan hasilnya terdapat _missing values_ (NaN) sekitar 52549 pada kolom _tags_, maka bisa menggunakan _dropna_ untuk menghapus _missing value_. Jumlah data ada 285.762 baris dan 7 kolom.
+- Membersihkan data dari nilai _null_ dengan menggunakan fungsi _dropna_. Fungsi ini akan menghapus semua baris yang memiliki _missing value_ (NaN) pada kolom _tags_. Sehingga jumlah data setelah dihapus _missing value_ nya ada 233.213 baris dan 7 kolom.
 - Membersihkan data dari duplikasi menggunakan fungsi _drop duplicates_.
 Membuang data duplikat dengan _drop_duplicates_ pada _movieId_,sehingga _movieId_ tidak ada yang sama dan didapati data sebanyak 1554 baris dan 7 kolom.
 - Mengembalikan daftar _list_ _movieId_,_title_, dan _genres_ pada _id_, _names_, dan _genres_. Kemudian simpan didataframe baru _new_movies_ lalu _dictionary_ untuk menentukan pasangan _key-value_ pada data yang telah disiapkan. Hasilnya dapat dilihat pada Tabel 7.
@@ -152,16 +126,7 @@ Tabel 7. Data _new_movies_
 | 5|Father of the Bride Part II (1995)|	Comedy|
 | 7|Sabrina (1995)|Comedy, Romance|
 
-- Menggunakan TfidfVectorizer untuk melakukan perhitungan idf pada data genres.
-
-  ![image](https://github.com/zashnf/Recommendation-System/assets/89719711/f0bbeedf-6b93-4ed2-8d9f-dc07a9ecb442)
-  
- Gambar 3. Tfidf pada _genres_
- 
- Pada Gambar 3 terdapat 24 _genres_ yang nantinya akan di _fit_ dan _transform_ ke TfidfVectorizer
- 
-- Melakukan _fit_ dan _transform_ TfidfVectorizer ke dalam bentuk matriks menggunaan fungsi _todense_.
-Matriks yang dimiliki berukuran (1554,24) Dimana nilai 1554 merupakan ukuran data dan 24 adalah banyaknya kategori genres. Selanjutnya jika ingin melihat matriks tfidf untuk beberapa nama film (disini saya menampilkan 5 nama film)berdasarkan _genres_ yang dapat dilihat pada Tabel 9.
+- Melakukan _mapping_ _array_ dari kolom _genres_ ke _feature_names_. _get_feature_names_out_ akan mengeluarkan nilai array sebanyak 24 _genres_ yang nantinya akan di _fit_ dan _transform_ ke TfidfVectorizer. Kemudian melakukan _fit_ dan _transform_ TfidfVectorizer ke dalam bentuk matriks menggunaan fungsi _todense_. Matriks yang dimiliki berukuran (1554,24) Dimana nilai 1554 merupakan ukuran data dan 24 adalah banyaknya kategori genres. Selanjutnya jika ingin melihat matriks tfidf untuk beberapa nama film (disini saya menampilkan 5 nama film)berdasarkan _genres_ yang dapat dilihat pada Tabel 9.
 - Menggunakan cosine similarity untuk menghitung derajat kesamaan antar film, dapat dilihat pada Tabel 10.
 - Membuat fungsi rekomendasi dengan parameter:
     - movies_name = berisikan judul film.
@@ -293,7 +258,7 @@ Visualisasi model evaluasi metrik dapat dilihat pada gambar 6 dibawah ini.
 
 Gambar 6. model evaluasi
 
-Pada gambar 6. proses training model dengan batch size 64 serta epoch 100  diperoleh nilai error akhir (RMSE) di sekitar 0.1939 dan error pada data validasi sebesar 0.2064.  Nilai tersebut cukup bagus untuk sistem rekomendasi. Semakin kecil (mendekati 0) nilai RMSE maka semakin akurat nilai prediksinya [2].
+Pada gambar 6. proses training model dengan batch size 64 serta epoch 100  diperoleh nilai error akhir (RMSE) di sekitar 0.1939 dan error pada data validasi sebesar 0.2064.  Nilai tersebut cukup bagus untuk sistem rekomendasi. Semakin kecil (mendekati 0) nilai RMSE maka semakin akurat nilai prediksinya [2].Sehingga analisa grafik pada Gambar 6 dapat dikatakan _overfit_ karena _training error_ menurun dan _validation error_ naik.
 
 ### Kesimpulan
 Kesimpulan dari pembuatan sistem rekomendasi film ini adalah baik secara _Content Based Filtering_ dan _Collaborative Filtering_ masing masing dapat merekomendasikan film berdasarkan kriterianya, dimana pada _Content Based Filtering_ rekomendasi yang dihasilkan berdasarkan film yang disukai oleh _user_ sedangkan pada _Collaborative Filtering_ hasil rekomendasinya berdasarkan _rating_ tinggi pada film yang pernah diberikan oleh pengguna sebelumnya. Pada _Content Based Filtering_ evaluasi metrik _precision_ yang didapat sebesar 100% dan evaluasi metrik pada _Collaborative Filtering_ didapati nilai error akhir (RMSE) 0.1939 dan error pada data validasinya sebesar 0.2064.
