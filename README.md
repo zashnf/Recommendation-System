@@ -67,15 +67,17 @@ Tabel 4. Sample Dataset Links
 |   2|   113497|   8844.0|
 |   3|   113228|   15602.0|
 
-Pada Tabel 4 _movieId_ memuat nomor id film yang merujuk pada website MoviLens, _imdbId_ memuat nomor id film yang merujuk pada website IMDB, dan _tmdbId yng memuat nomor id fim yang merujuk pada website TMDB.
+Pada Tabel 4 _movieId_ memuat nomor id film yang merujuk pada website MoviLens, _imdbId_ memuat nomor id film yang merujuk pada website IMDB, dan tmdbId yng memuat nomor id fim yang merujuk pada website TMDB.
 
 ### Exploratory Data Analysis (EDA)
 Pada proses _Exploratory Data Analysis_ dilakukan untuk melihat hubungan antar dataset berdasarkan variabel id, disini menggunakan _moviesId__ dan _userId_.
 
 - _moviesId_
+  
 Menggabungkan seluruh movieId yang merujuk ke film yang sama pada file (_movies_, _tags_, _ratings_, dan _links_) dan disimpan pada _all_movies_.Sehingga didapat jumlah seluruh data _movies_ berdasarkan _moviesId_ sebanyak 9742.
 
 - _userId_
+
 Menggabungkan semua userId pada users, dalam hal ini userId pada file _tags_ dan _ratings_, kemudian mengambil nilai unik pada _userId_ . Sehingga didapat jumlah seluruh pengguna(_user_) ada sebanyak 610.
 
 ## Data Preparation
@@ -240,25 +242,25 @@ Bisa dilihat pada Tabel 14 diatas bahwa hasil rekomendasi film yang diberikan ol
 
 
 ## Evaluation
-Metrik evaluasi yang digunakan pada _Content Based Filtering_ adalah metrik _precision_. Rumus dari metrik _precision_ dapat dilihat pada gambar
+Metrik evaluasi yang digunakan pada _Content Based Filtering_ adalah metrik _precision_. Rumus dari metrik _precision_ dapat dilihat pada Gambar 1.
 
 ![precision](https://github.com/zashnf/Recommendation-System/assets/89719711/77468252-cf7b-441b-8a33-c6312deb8067)
 
-Gambar 5. Rumus _Precision_
+Gambar 1. Rumus _Precision_
 
-Mengacu pada contoh rekomendasi film di Tabel 11, diketahui bahwa The Hobbit: The Battle of the Five Armies(2014) termasuk ke dalam kategori _Adventure_ dan _Fantasy_. Maka dari 3 item yang direkomendasikan di Tabel 2, 3 item memiliki kategori _Adventure_ dan _Fantasy_(_similar_). Artinya jika menggunakan rumus _precision_ hasil yang didapat sebesar 3/3 atau 100%.
+Mengacu pada contoh rekomendasi film di Tabel 11, diketahui bahwa The Hobbit: The Battle of the Five Armies(2014) termasuk ke dalam kategori _Adventure_ dan _Fantasy_. Maka dari 3 item yang direkomendasikan di Tabel 12, 3 item memiliki kategori _Adventure_ dan _Fantasy_(_similar_). Artinya jika menggunakan rumus _precision_ hasil yang didapat sebesar 3/3 atau 100%.
 
 Pada _Collaborative Filtering_ metrik evaluasi yang digunakan adalah RMSE (_Root Mean Squared Error_). RMSE (_Root Mean Squared Error_) berfungsi untuk mendapatkan besaran tingkat kesalahan dari hasil prediksi. Untuk menerapkannya bisa dengan menggunakan: 
 
  		metrics=[tf.keras/metrics.RootMeanSquaredError()]
 
-Visualisasi model evaluasi metrik dapat dilihat pada gambar 6 dibawah ini.
+Visualisasi model evaluasi metrik dapat dilihat pada Gambar 2 dibawah ini.
 
 ![model](https://github.com/zashnf/Recommendation-System/assets/89719711/0727adc2-6fe5-4505-8622-0e701eecf2bf)
 
-Gambar 6. model evaluasi
+Gambar 2. model evaluasi
 
-Pada gambar 6. proses training model dengan batch size 64 serta epoch 100  diperoleh nilai error akhir (RMSE) di sekitar 0.1939 dan error pada data validasi sebesar 0.2064.  Nilai tersebut cukup bagus untuk sistem rekomendasi. Semakin kecil (mendekati 0) nilai RMSE maka semakin akurat nilai prediksinya [2].Sehingga analisa grafik pada Gambar 6 dapat dikatakan _overfit_ karena _training error_ menurun dan _validation error_ naik.
+Pada Gambar 2. proses training model dengan batch size 64 serta epoch 100  diperoleh nilai error akhir (RMSE) di sekitar 0.1939 dan error pada data validasi sebesar 0.2064.  Nilai tersebut cukup bagus untuk sistem rekomendasi. Semakin kecil (mendekati 0) nilai RMSE maka semakin akurat nilai prediksinya [2].Sehingga analisa grafik pada Gambar 2 dapat dikatakan _overfit_ karena _training error_ menurun dan _validation error_ naik.
 
 ### Kesimpulan
 Kesimpulan dari pembuatan sistem rekomendasi film ini adalah baik secara _Content Based Filtering_ dan _Collaborative Filtering_ masing masing dapat merekomendasikan film berdasarkan kriterianya, dimana pada _Content Based Filtering_ rekomendasi yang dihasilkan berdasarkan film yang disukai oleh _user_ sedangkan pada _Collaborative Filtering_ hasil rekomendasinya berdasarkan _rating_ tinggi pada film yang pernah diberikan oleh pengguna sebelumnya. Pada _Content Based Filtering_ evaluasi metrik _precision_ yang didapat sebesar 100% dan evaluasi metrik pada _Collaborative Filtering_ didapati nilai error akhir (RMSE) 0.1939 dan error pada data validasinya sebesar 0.2064.
